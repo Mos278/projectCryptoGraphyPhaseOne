@@ -65,8 +65,7 @@ public class App {
     long Result = convertToOdd(tempResult, max);
     System.out.println("result random from file: " + Result);
 
-    while (primeNumberService.isPrimeNumberByLehManTestSetExpo(
-            Result, exponentiationService::fastExpo)
+    while (primeNumberService.IsPrime(Result, exponentiationService::fastExpo)
         == PrimeNumberService.STATE_PRIME.NOT_PRIME) {
       round++;
       if (forward && Result + 2 < max) {
@@ -86,12 +85,13 @@ public class App {
   }
 
   private long[] GenRandomNoWithInverse(long prime) {
-    long base = new Random().nextLong(prime - 1);
+    long base = new Random().nextLong(prime - 1) + 1;
+
     while (gcdService.findGCD(base, prime) != 1) {
       base++;
+      if (base >= prime) base = 1;
     }
-    base = base % prime;
-
+    // Select base = [1 - prime - 1] && gcd(base,prime) == 1
     long inverse = gcdService.findInverse(base, prime);
 
     return new long[] {base, inverse, prime};
@@ -105,5 +105,5 @@ public class App {
     return tempResult;
   }
 }
-//./gradlew spotlessApply
-// ./gradlew build    
+// ./gradlew spotlessApply
+// ./gradlew build

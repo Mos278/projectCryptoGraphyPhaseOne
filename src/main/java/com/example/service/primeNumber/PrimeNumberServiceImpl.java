@@ -17,7 +17,7 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
   }
 
   @Override
-  public PrimeNumberService.STATE_PRIME isPrimeNumberByLehManTestSetExpo(
+  public PrimeNumberService.STATE_PRIME IsPrime(
       long number, ExpoAlgorithmMethod expoAlgorithmMethod) {
     if (number == 2) return STATE_PRIME.PRIME;
     if (number % 2 == 0 || number < 2) return STATE_PRIME.NOT_PRIME;
@@ -66,8 +66,7 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
   public long findMaxPrimeBeforeOverflow(ExpoAlgorithmMethod expoAlgorithmMethod) {
     long maxPrime = 0;
     for (long i = 3; i < Long.MAX_VALUE; i = i + 2) {
-      PrimeNumberService.STATE_PRIME state =
-          isPrimeNumberByLehManTestSetExpo(i, expoAlgorithmMethod);
+      PrimeNumberService.STATE_PRIME state = IsPrime(i, expoAlgorithmMethod);
       if (state == STATE_PRIME.PRIME) maxPrime = i;
       if (state == STATE_PRIME.OVERFLOW) {
         break;
