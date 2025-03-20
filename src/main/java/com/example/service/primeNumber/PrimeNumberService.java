@@ -8,8 +8,7 @@ public interface PrimeNumberService {
     OVERFLOW
   }
 
-  PrimeNumberService.STATE_PRIME isPrimeNumberByLehManTestSetExpo(
-      long number, ExpoAlgorithmMethod expoAlgorithmMethod);
+  PrimeNumberService.STATE_PRIME IsPrime(long number, ExpoAlgorithmMethod expoAlgorithmMethod);
 
   long findMaxPrimeBeforeOverflow(ExpoAlgorithmMethod expoAlgorithmMethod);
 

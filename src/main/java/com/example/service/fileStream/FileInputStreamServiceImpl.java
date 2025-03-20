@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 public class FileInputStreamServiceImpl implements FileInputStreamService {
   @Override
   public long randomNBitFromFile(int bitSize, String fileName) {
-    // byte[] fakeFileData = new byte[]{(byte) 0b11111111, (byte) 0b11111111, (byte) 0b01000001}; //
-    // 8 บิต + 2 บิต
+    // byte[] fakeFileData = new byte[]{(byte) 0b11111111, (byte) 0b11111111, (byte) 0b01000001};
     try (FileInputStream file = new FileInputStream(fileName)) {
 
       StringBuilder bits = new StringBuilder();

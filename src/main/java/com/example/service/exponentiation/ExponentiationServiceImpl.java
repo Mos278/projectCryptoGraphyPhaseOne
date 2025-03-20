@@ -41,7 +41,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
 
   @Override
   public long fastExpo(long base, long expo) {
-    long mod = (expo * 2) + 1;
+    long mod = (expo * 2) + 1; // expo convert to mod is prime
     long result = 1L;
     long a = base;
     long b = expo;
