@@ -24,8 +24,8 @@ public class GCDServiceImpl implements GCDService {
   }
 
   @Override
-  public long findInverse(
-      long base, long mod) { // ค่าใด เมื่อ * กับ base เเล้ว mod กับ modulo เเล้วได้เศษ 1
+  public long findInverse(long base, long mod) {
+    // ค่าใด เมื่อ * กับ base เเล้ว mod กับ modulo เเล้วได้เศษ 1
 
     if (!isCoprime(base, mod)) {
       System.out.println(base + " and " + mod + " are not coprime");

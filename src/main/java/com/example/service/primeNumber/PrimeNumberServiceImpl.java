@@ -1,6 +1,7 @@
 package com.example.service.primeNumber;
 
 import com.example.service.GCD.GCDService;
+import com.example.service.exponentiation.ExponentiationService;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,17 @@ import org.springframework.stereotype.Service;
 public class PrimeNumberServiceImpl implements PrimeNumberService {
 
   private final GCDService gcdService;
+  private final ExponentiationService exponentiationService;
 
   @Autowired
-  public PrimeNumberServiceImpl(GCDService gcdService) {
+  public PrimeNumberServiceImpl(
+      GCDService gcdService, ExponentiationService exponentiationService) {
     this.gcdService = gcdService;
+    this.exponentiationService = exponentiationService;
   }
 
   @Override
-  public PrimeNumberService.STATE_PRIME IsPrime(
-      long number, ExpoAlgorithmMethod expoAlgorithmMethod) {
+  public PrimeNumberService.STATE_PRIME IsPrime(long number) {
     if (number == 2) return STATE_PRIME.PRIME;
     if (number % 2 == 0 || number < 2) return STATE_PRIME.NOT_PRIME;
 
@@ -32,7 +35,7 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
             .toList();
 
     for (long candidate : candidates) {
-      long expo = expoAlgorithmMethod.apply(candidate, (number - 1) / 2);
+      long expo = exponentiationService.fastExpo(candidate, (number - 1) / 2, number);
       long result = expo % number;
 
       if (expo == -1) {
@@ -63,10 +66,10 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
   }
 
   @Override
-  public long findMaxPrimeBeforeOverflow(ExpoAlgorithmMethod expoAlgorithmMethod) {
+  public long findMaxPrimeBeforeOverflow() {
     long maxPrime = 0;
     for (long i = 3; i < Long.MAX_VALUE; i = i + 2) {
-      PrimeNumberService.STATE_PRIME state = IsPrime(i, expoAlgorithmMethod);
+      PrimeNumberService.STATE_PRIME state = IsPrime(i);
       if (state == STATE_PRIME.PRIME) maxPrime = i;
       if (state == STATE_PRIME.OVERFLOW) {
         break;
