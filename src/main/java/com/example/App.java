@@ -38,9 +38,6 @@ public class App {
       System.out.println("base: " + result[0] + " inverse: " + result[1] + " prime: " + result[2]);
       System.out.println((result[0] * result[1]) % result[2]);
 
-      //
-      // System.out.println(primeNumberService.findMaxPrimeBeforeOverflow(exponentiationService::fastExpo));
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -57,16 +54,15 @@ public class App {
     long tempResult = fileInputStreamService.randomNBitFromFile(bit, fileName);
 
     boolean forward = true;
-    long max = ((exponentiationService.fastExpoWithOutMod(2, bit) - 1));
-    long min = exponentiationService.fastExpoWithOutMod(2, (bit - 1));
+    long max = ((exponentiationService.fastExpo(2, bit) - 1));
+    long min = exponentiationService.fastExpo(2, (bit - 1));
     int round = 0;
     boolean firstBackward = true;
 
     long Result = convertToOdd(tempResult, max);
     System.out.println("result random from file: " + Result);
 
-    while (primeNumberService.IsPrime(Result, exponentiationService::fastExpo)
-        == PrimeNumberService.STATE_PRIME.NOT_PRIME) {
+    while (primeNumberService.IsPrime(Result) == PrimeNumberService.STATE_PRIME.NOT_PRIME) {
       round++;
       if (forward && Result + 2 < max) {
         Result = Result + 2;
