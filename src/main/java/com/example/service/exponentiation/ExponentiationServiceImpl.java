@@ -1,6 +1,5 @@
 package com.example.service.exponentiation;
 
-import java.math.BigInteger;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,7 +10,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
     long result = 1L;
     long b = expo;
     while (b > 0) {
-      if (result <= 0) return -1; // overflow
+      if (result <= 0) return -99; // overflow
       result *= base;
       b--;
     }
@@ -21,7 +20,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
   }
 
   @Override
-  public long fastExpoWithOutMod(long base, long expo) {
+  public long fastExpo(long base, long expo) {
     long result = 1L;
     long a = base;
     long b = expo;
@@ -29,7 +28,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
     while (b > 0) {
       if ((b & 1) > 0) {
         result = (result * a);
-        if (result <= 0) return -1; // overflow
+        if (result <= 0) return -99; // overflow
       }
       b >>= 1;
       a = (a * a);
@@ -40,8 +39,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
   }
 
   @Override
-  public long fastExpo(long base, long expo) {
-    long mod = (expo * 2) + 1; // expo convert to mod is prime
+  public long fastExpo(long base, long expo, long mod) {
     long result = 1L;
     long a = base;
     long b = expo;
@@ -49,30 +47,13 @@ public class ExponentiationServiceImpl implements ExponentiationService {
     while (b > 0) {
       if ((b & 1) > 0) {
         result = (result * a) % mod;
-        if (result <= 0) return -1; // overflow
+        if (result <= 0) return -99; // overflow
       }
       b >>= 1;
       a = (a * a) % mod;
     }
 
     //        System.out.println("base: " + base + " expo: " + expo + " result: " + result);
-    return result;
-  }
-
-  @Override
-  public BigInteger binaryFastExpoReturnBigInt(long base, long expo) {
-    BigInteger result = BigInteger.ONE;
-    BigInteger a = BigInteger.valueOf(base);
-    long b = expo;
-
-    while (b > 0) {
-      if ((b & 1) == 1) {
-        result = result.multiply(a);
-      }
-      a = a.multiply(a);
-      b >>= 1;
-      System.out.println("b: " + b);
-    }
     return result;
   }
 }

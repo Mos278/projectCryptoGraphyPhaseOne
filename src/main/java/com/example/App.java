@@ -13,33 +13,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class App {
-  private final GCDService gcdService;
-  private final PrimeNumberService primeNumberService;
-  private final ExponentiationService exponentiationService;
+
   private final FileInputStreamService fileInputStreamService;
+  private final ExponentiationService exponentiationService;
+  private final PrimeNumberService primeNumberService;
+  private final GCDService gcdService;
 
   @Autowired
   public App(
-      GCDService gcdService,
-      PrimeNumberService primeNumberService,
+      FileInputStreamService fileInputStreamService,
       ExponentiationService exponentiationService,
-      FileInputStreamService fileInputStreamService) {
-    this.gcdService = gcdService;
-    this.primeNumberService = primeNumberService;
-    this.exponentiationService = exponentiationService;
+      PrimeNumberService primeNumberService,
+      GCDService gcdService) {
     this.fileInputStreamService = fileInputStreamService;
+    this.exponentiationService = exponentiationService;
+    this.primeNumberService = primeNumberService;
+    this.gcdService = gcdService;
   }
 
   public void run() {
     try {
-
-      long RandomPrimeNumber = GenPrime(31, "src/main/resources/FB_IMG.jpg");
+      long RandomPrimeNumber = GenPrime(32, "src/main/resources/FB_IMG.jpg");
       long[] result = GenRandomNoWithInverse(RandomPrimeNumber);
       System.out.println("base: " + result[0] + " inverse: " + result[1] + " prime: " + result[2]);
       System.out.println((result[0] * result[1]) % result[2]);
-
-      //
-      // System.out.println(primeNumberService.findMaxPrimeBeforeOverflow(exponentiationService::fastExpo));
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -52,49 +49,48 @@ public class App {
     app.run();
   }
 
-  private long GenPrime(int bit, String fileName) throws Exception {
+  public long GenPrime(int bit, String fileName) throws Exception {
     System.out.println("Reading file...");
     long tempResult = fileInputStreamService.randomNBitFromFile(bit, fileName);
 
     boolean forward = true;
-    long max = ((exponentiationService.fastExpoWithOutMod(2, bit) - 1));
-    long min = exponentiationService.fastExpoWithOutMod(2, (bit - 1));
+    long max = ((exponentiationService.fastExpo(2, bit) - 1));
+    long min = exponentiationService.fastExpo(2, (bit - 1));
     int round = 0;
     boolean firstBackward = true;
 
-    long Result = convertToOdd(tempResult, max);
-    System.out.println("result random from file: " + Result);
-
-    while (primeNumberService.IsPrime(Result, exponentiationService::fastExpo)
-        == PrimeNumberService.STATE_PRIME.NOT_PRIME) {
+    long resultOdd = convertToOdd(tempResult, max);
+    System.out.println("result random from file: " + resultOdd);
+    long tempResultOdd = resultOdd;
+    while (primeNumberService.IsPrime(resultOdd) == PrimeNumberService.STATE_PRIME.NOT_PRIME) {
       round++;
-      if (forward && Result + 2 < max) {
-        Result = Result + 2;
-      } else if (Result - 2 > min) {
+      if (forward && resultOdd + 2 < max) {
+        resultOdd = resultOdd + 2;
+      } else if (resultOdd - 2 > min) {
         forward = false;
         if (firstBackward) {
-          Result = tempResult - 2;
+          resultOdd = tempResultOdd - 2;
           firstBackward = false;
-        } else Result = Result - 2;
+        } else resultOdd = resultOdd - 2;
       } else {
         throw new Exception("Cannot find Prime Number");
       }
-      System.out.println("Result from Gen Prime: " + Result + " round: " + round);
+      System.out.println("Result from Gen Prime: " + resultOdd + " round: " + round);
     }
-    return Result;
+    return resultOdd;
   }
 
-  private long[] GenRandomNoWithInverse(long prime) {
-    long base = new Random().nextLong(prime - 1) + 1;
+  public long[] GenRandomNoWithInverse(long n) {
+    long e = new Random().nextLong(n - 1) + 1; // 1 - (n - 1)
 
-    while (gcdService.findGCD(base, prime) != 1) {
-      base++;
-      if (base >= prime) base = 1;
+    while (gcdService.findGCD(e, n) != 1) {
+      e++;
+      if (e >= n) e = 1;
     }
-    // Select base = [1 - prime - 1] && gcd(base,prime) == 1
-    long inverse = gcdService.findInverse(base, prime);
+    // Select e = [1 - (n - 1)] && gcd(e,n) == 1
+    long inverse = gcdService.findInverse(e, n);
 
-    return new long[] {base, inverse, prime};
+    return new long[] {e, inverse, n};
   }
 
   private long convertToOdd(long tempResult, long max) {

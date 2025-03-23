@@ -8,11 +8,7 @@ public interface PrimeNumberService {
     OVERFLOW
   }
 
-  PrimeNumberService.STATE_PRIME IsPrime(long number, ExpoAlgorithmMethod expoAlgorithmMethod);
+  PrimeNumberService.STATE_PRIME IsPrime(long number);
 
-  long findMaxPrimeBeforeOverflow(ExpoAlgorithmMethod expoAlgorithmMethod);
-
-  interface ExpoAlgorithmMethod {
-    Long apply(Long base, Long expo);
-  }
+  long findMaxPrimeBeforeOverflow();
 }
