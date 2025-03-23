@@ -11,7 +11,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
     long result = 1L;
     long b = expo;
     while (b > 0) {
-      if (result <= 0) return -1; // overflow
+      if (result <= 0) return -99; // overflow
       result *= base;
       b--;
     }
@@ -29,7 +29,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
     while (b > 0) {
       if ((b & 1) > 0) {
         result = (result * a);
-        if (result <= 0) return -1; // overflow
+        if (result <= 0) return -99; // overflow
       }
       b >>= 1;
       a = (a * a);
@@ -48,7 +48,7 @@ public class ExponentiationServiceImpl implements ExponentiationService {
     while (b > 0) {
       if ((b & 1) > 0) {
         result = (result * a) % mod;
-        if (result <= 0) return -1; // overflow
+        if (result <= 0) return -99; // overflow
       }
       b >>= 1;
       a = (a * a) % mod;

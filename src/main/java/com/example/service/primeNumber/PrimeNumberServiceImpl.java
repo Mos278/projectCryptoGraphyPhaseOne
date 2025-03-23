@@ -27,7 +27,7 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
 
     List<Long> candidates =
         new Random()
-            .longs(1, number)
+            .longs(1, number) // Z n star (1 - (n-1))
             .distinct()
             .limit(Math.min(100, number - 1))
             .filter(a -> gcdService.findGCD(a, number) == 1)
@@ -38,9 +38,9 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
       long expo = exponentiationService.fastExpo(candidate, (number - 1) / 2, number);
       long result = expo % number;
 
-      if (expo == -1) {
+      if (expo == -99) {
         System.out.println(
-            " Overflow detected: number = "
+            "Overflow detected: number = "
                 + number
                 + ", candidate = "
                 + candidate
@@ -49,7 +49,7 @@ public class PrimeNumberServiceImpl implements PrimeNumberService {
         return STATE_PRIME.OVERFLOW;
       }
 
-      if (result != 1 && result != number - 1) {
+      if (result != 1 && result != -1 && result != number - 1) {
         System.out.println(
             "Not Prime detected: number = "
                 + number
